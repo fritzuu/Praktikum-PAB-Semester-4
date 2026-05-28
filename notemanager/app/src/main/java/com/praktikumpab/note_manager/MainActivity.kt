@@ -145,8 +145,8 @@ fun NoteFlowApp(
                 route = Screen.Detail.route,
                 arguments = listOf(navArgument("noteId") { type = NavType.IntType })
             ) { backStackEntry ->
-                val noteId = backStackEntry.arguments?.getInt("noteId")
-                val note = noteId?.let { viewModel.getNoteById(it) }
+                val noteId = backStackEntry.arguments?.getInt("noteId") ?: -1
+                val note = uiState.notes.find { it.id == noteId }
                 DetailNoteScreen(
                     note = note,
                     onBack = { navController.popBackStack() },
@@ -166,8 +166,8 @@ fun NoteFlowApp(
                     defaultValue = -1 
                 })
             ) { backStackEntry ->
-                val noteId = backStackEntry.arguments?.getInt("noteId")
-                val note = if (noteId != null && noteId != -1) viewModel.getNoteById(noteId) else null
+                val noteId = backStackEntry.arguments?.getInt("noteId") ?: -1
+                val note = if (noteId != -1) uiState.notes.find { it.id == noteId } else null
                 AddEditNoteScreen(
                     note = note,
                     onSave = { title, content, category, deadline ->
